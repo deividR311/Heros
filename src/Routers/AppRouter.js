@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import {
     BrowserRouter as Router,
     Switch,
@@ -6,8 +6,15 @@ import {
 } from "react-router-dom";
 import { LoginScreen } from '../Components/login/LoginScreen';
 import { DashboardRoutes } from './DashboardRoutes';
+import { PrivateRoutes } from './PrivateRoutes';
+import { AuthContext } from '../auth/AuthContext';
+import { PublicRoutes } from './PublicRoutes';
+
 
 export const AppRouter = () => {
+
+    const { user } = useContext( AuthContext );
+    console.log( user );
     return (
         <Router>
             <div>
@@ -15,9 +22,9 @@ export const AppRouter = () => {
                 {/* A <Switch> looks through its children <Route>s and
             renders the first one that matches the current URL. */}
                 <Switch>
-                    <Route exact path="/login" component={ LoginScreen }></Route>
+                    <PublicRoutes isAuthenticated={ user.logged } exact path="/login" component={ LoginScreen } />
 
-                    <Route path="/" component={ DashboardRoutes }></Route>
+                    <PrivateRoutes isAuthenticated={ user.logged } path="/" component={ DashboardRoutes }></PrivateRoutes>
                 </Switch>
             </div>
         </Router>
